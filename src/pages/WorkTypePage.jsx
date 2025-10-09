@@ -28,7 +28,7 @@ const WorkTypePage = () => {
 
     const handleContinue = () => {
         if (selectedType) {
-            navigate('/templateselect');
+            navigate('/template-select');
         }
     };
 

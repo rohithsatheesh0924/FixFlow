@@ -2,13 +2,14 @@
 import React, { useState } from 'react';
 import Button from '../components/ui/Button';
 import VerificationCodeInput from '../components/VerificationCodeInput';
+import { useNavigate } from 'react-router-dom';
 // import JiraIcon from '../assets/JiraIcon.svg'; // Uncomment and replace with your logo
 
 const OtpVerificationPage = () => {
   const [verificationCode, setVerificationCode] = useState('');
   const [isCodeComplete, setIsCodeComplete] = useState(false);
   const email = 'chnadashrestha@gmail.com'; // Dynamic data
-
+  const naviagate = useNavigate();
   const handleVerificationComplete = (code) => {
     setVerificationCode(code);
     setIsCodeComplete(code.length === 6);
@@ -18,7 +19,7 @@ const OtpVerificationPage = () => {
     if (isCodeComplete) {
       console.log('Verifying code:', verificationCode);
       // Logic for API call to verify OTP goes here
-      alert(`Verifying code: ${verificationCode}`);
+      naviagate('/accountdetails' );
     }
   };
 

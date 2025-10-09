@@ -7,6 +7,7 @@ import AccountDetails from './pages/AccountDetailsPage';
 import StoreInfo from './pages/StoreInfoPage';
 import WorkType from './pages/WorkTypePage';
 import TemplateSelection from './pages/TemplateSelectionPage';
+import ProjectCreationPage from './pages/ProjectCreationPage';
 
 const App = () => {
   return (
@@ -21,7 +22,8 @@ const App = () => {
         <Route path="/accountdetails" element={<AccountDetails />} />
         <Route path="/store-info" element={<StoreInfo />} />
         <Route path="/work-type" element={<WorkType />} />
-        <Route path="/templateselect" element={<TemplateSelection />} />
+        <Route path="/template-select" element={<TemplateSelection />} />
+        <Route path="/projectcreation" element={<ProjectCreationPage />} />
 
         {/* Catch-all 404 */}
         <Route 
