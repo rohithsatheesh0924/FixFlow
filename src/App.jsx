@@ -12,6 +12,10 @@ import CreateProject from './pages/ProjectCreationPage';
 
 import DashboardLayout from './layouts/DashboardLayout';
 import Dashboard from './projectdashboard/ProjectDashboard';
+import ReportsPage from './projectdashboard/ReportsPage';
+import ReportConfigurePage from './projectdashboard/ReportConfigurePage';
+import YourWorkPage from './pages/YourWorkPage';
+import FormsPage from './projectdashboard/FormsPage';
 
 const App = () => {
   return (
@@ -28,10 +32,15 @@ const App = () => {
         <Route path="/work-type" element={<WorkType />} />
         <Route path="/template-select" element={<TemplateSelection />} />
         <Route path="/create-project" element={<CreateProject />} />
+        
 
         {/* Dashboard Flow (Uses fixed Header/Sidebar Layout) */}
         <Route element={<DashboardLayout />}>
+            <Route path="/your-work" element={<YourWorkPage />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/reports" element={<ReportsPage />} />
+            <Route path="/reports/configure/:reportName" element={<ReportConfigurePage />} />
+            <Route path="/forms" element={<FormsPage />} />
         </Route>
 
         {/* Catch-all 404 */}
