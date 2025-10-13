@@ -19,7 +19,7 @@ const OtpVerificationPage = () => {
     if (isCodeComplete) {
       console.log('Verifying code:', verificationCode);
       // Logic for API call to verify OTP goes here
-      naviagate('/accountdetails' );
+      naviagate('/account-details' );
     }
   };
 

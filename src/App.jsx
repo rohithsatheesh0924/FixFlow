@@ -1,29 +1,38 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 
+import Login from './pages/LoginPage';
 import Register from './pages/SignupForm';
 import Verification from './pages/OtpVerificationPage';
 import AccountDetails from './pages/AccountDetailsPage';
 import StoreInfo from './pages/StoreInfoPage';
 import WorkType from './pages/WorkTypePage';
 import TemplateSelection from './pages/TemplateSelectionPage';
-import ProjectCreationPage from './pages/ProjectCreationPage';
+import CreateProject from './pages/ProjectCreationPage';
+
+import DashboardLayout from './layouts/DashboardLayout';
+import Dashboard from './projectdashboard/ProjectDashboard';
 
 const App = () => {
   return (
     <div className="App">
       <Routes>
         
-        {/* Auth and Setup Flow */}
-        <Route path="/" element={<Navigate to="/register" replace />} />
-
+        {/* Public/Auth Flow */}
+        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="/login" element={<Login />} /> 
         <Route path="/register" element={<Register />} /> 
         <Route path="/verification" element={<Verification />} />
-        <Route path="/accountdetails" element={<AccountDetails />} />
+        <Route path="/account-details" element={<AccountDetails />} />
         <Route path="/store-info" element={<StoreInfo />} />
         <Route path="/work-type" element={<WorkType />} />
         <Route path="/template-select" element={<TemplateSelection />} />
-        <Route path="/projectcreation" element={<ProjectCreationPage />} />
+        <Route path="/create-project" element={<CreateProject />} />
+
+        {/* Dashboard Flow (Uses fixed Header/Sidebar Layout) */}
+        <Route element={<DashboardLayout />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+        </Route>
 
         {/* Catch-all 404 */}
         <Route 

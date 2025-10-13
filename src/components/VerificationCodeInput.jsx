@@ -1,4 +1,3 @@
-// src/components/VerificationCodeInput.jsx
 import React, { useState, useRef } from 'react';
 
 const NUM_DIGITS = 6;

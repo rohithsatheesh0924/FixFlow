@@ -99,7 +99,7 @@ const TemplateSelectionPage = () => {
     const handleContinue = () => {
         console.log(`Final template selected: ${selectedTemplate}`);
         // Final action: Navigate to the user's new dashboard/home page
-        navigate('/projectcreation'); 
+        navigate('/dashboard'); 
     };
 
     const handleBack = () => {

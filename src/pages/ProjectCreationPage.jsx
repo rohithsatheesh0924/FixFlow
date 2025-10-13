@@ -68,7 +68,7 @@ const ProjectCreationPage = () => {
         e.preventDefault();
         // Since we are now using empty state, you might want to add validation here
         if (name && key) {
-            navigate('/'); 
+            navigate('/dashboard'); 
         } else {
             console.error("Project Name and Key are required.");
         }
