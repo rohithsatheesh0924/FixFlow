@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
+// Assuming ProjectIssuesMenu is a component in the same file or imported
 
+// --- ProjectIssuesMenu Component (Remains Unchanged) ---
 const ProjectIssuesMenu = ({ projectName, onClose }) => {
     const menuRef = useRef(null);
 
@@ -37,7 +39,6 @@ const ProjectIssuesMenu = ({ projectName, onClose }) => {
     return (
         <div 
             ref={menuRef} 
-            // Added class 'ProjectIssuesMenu' for targeted styling/debugging if necessary
             className="ProjectIssuesMenu absolute top-0 left-full ml-1 w-64 bg-white rounded-lg shadow-2xl border border-gray-100 z-40 p-4"
         >
             <div className="flex items-center space-x-3 pb-3 mb-4 border-b border-gray-200">
@@ -68,11 +69,23 @@ const ProjectIssuesMenu = ({ projectName, onClose }) => {
         </div>
     );
 };
+// --- End ProjectIssuesMenu Component ---
 
+
+// --- Sidebar Component (Updated) ---
 const Sidebar = ({ projectName }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     
-    // Simple function to toggle the menu open/closed
+    // Handler for creating a new project
+    const handleCreateProject = () => {
+        // Here, you would implement the logic:
+        // 1. Collect basic project details (e.g., Project Name, Key)
+        // 2. Open a modal or navigate to a dedicated creation page (e.g., using useNavigate('/projects/create'))
+        console.log("Action: Launching modal/form for new project creation with basic details.");
+        alert("Simulating creation of a new project with basic details.");
+    };
+    
+    // Simple function to toggle the ProjectIssuesMenu
     const toggleMenu = () => {
         setIsMenuOpen(prev => !prev);
     };
@@ -80,35 +93,39 @@ const Sidebar = ({ projectName }) => {
     return (
         <div className="w-56 bg-gray-50 border-r border-gray-200 h-screen sticky top-0 p-4 flex flex-col justify-between overflow-y-auto relative">
             <div>
+                {/* 1. CREATE PROJECT BUTTON (New Specification) */}
                 <div className="mb-6">
-                    <h3 className="text-xs font-semibold uppercase text-gray-500 mb-2">Projects</h3>
-                    <div className="flex items-center justify-between text-blue-600 cursor-pointer">
-                        <span className="text-sm font-medium">Projects</span>
+                    <button
+                        className="w-full flex items-center justify-center space-x-2 bg-blue-600 text-white font-bold py-2 rounded-lg shadow-md hover:bg-blue-700 transition"
+                        onClick={handleCreateProject}
+                    >
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
                             <path fillRule="evenodd" d="M10 3a.75.75 0 01.75.75v4.5h4.5a.75.75 0 010 1.5h-4.5v4.5a.75.75 0 01-1.5 0v-4.5h-4.5a.75.75 0 010-1.5h4.5v-4.5A.75.75 0 0110 3z" clipRule="evenodd" />
                         </svg>
-                    </div>
+                        <span>Create Project</span>
+                    </button>
                 </div>
-                <div className="mb-6">
-                    <h3 className="text-xs font-semibold uppercase text-gray-500 mb-2">Recent</h3>
-                    
-                    <div className="relative">
-                        {/* Project Link that triggers the ProjectIssuesMenu on click */}
-                        <div 
-                            className="flex items-center space-x-2 bg-blue-100/50 p-2 rounded-lg text-gray-900 border border-blue-200 cursor-pointer"
-                            onClick={toggleMenu}
-                        >
-                            <div className="w-4 h-4 bg-purple-200 rounded-sm flex items-center justify-center text-xs text-purple-800 font-bold">L</div>
-                            <span className="text-sm font-medium">{projectName}</span>
-                        </div>
-                        <a href="#" className="text-xs text-gray-600 mt-3 block hover:underline">View all projects</a>
-                        
-                        {/* Render the menu if state is true */}
-                        {isMenuOpen && <ProjectIssuesMenu projectName={projectName} onClose={() => setIsMenuOpen(false)} />}
+                
+                <h3 className="text-xs font-semibold uppercase text-gray-500 mb-2">Recent</h3>
+
+                {/* 2. RECENT PROJECT/ISSUES MENU TRIGGER */}
+                <div className="relative">
+                    <div 
+                        className="flex items-center space-x-2 bg-blue-100/50 p-2 rounded-lg text-gray-900 border border-blue-200 cursor-pointer"
+                        onClick={toggleMenu}
+                    >
+                        <div className="w-4 h-4 bg-purple-200 rounded-sm flex items-center justify-center text-xs text-purple-800 font-bold">L</div>
+                        <span className="text-sm font-medium">{projectName}</span>
                     </div>
+                    <a href="#" className="text-xs text-gray-600 mt-3 block hover:underline">View all projects</a>
+                    
+                    {/* Render the menu if state is true */}
+                    {isMenuOpen && <ProjectIssuesMenu projectName={projectName} onClose={() => setIsMenuOpen(false)} />}
                 </div>
             </div>
-            <div className="text-xs text-gray-500">
+            
+            {/* 3. Footer Feedback */}
+            <div className="text-xs text-gray-500 mt-8 border-t border-gray-200 pt-4">
                 <p className="mb-1">You're in a team-managed project</p>
                 <div className="flex items-center space-x-1 cursor-pointer hover:text-blue-600">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">

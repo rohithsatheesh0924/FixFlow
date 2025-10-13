@@ -1,7 +1,21 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom'; // 👈 FIX: Import useNavigate
 
 const LoginPage = () => {
+  const navigate = useNavigate(); // Initialize navigate hook
+  const [email, setEmail] = useState('');
+
+  // Function to handle form submission and navigation
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    // NOTE: In a real app, you would verify credentials here.
+    console.log(`Attempting login for: ${email}`);
+    
+    // FIX: Navigate to the Dashboard Home page
+    navigate('/dashboard'); 
+  };
+
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
       <div className="bg-white rounded-xl shadow-2xl p-8 w-full max-w-sm text-center">
@@ -10,20 +24,31 @@ const LoginPage = () => {
           Placeholder for Login Form.
         </p>
         
-        <div className="space-y-4">
+        {/* FIX: Link form submission to handleSubmit */}
+        <form onSubmit={handleSubmit} className="space-y-4">
+          
           <input 
             type="email" 
             placeholder="Email" 
+            // Controlled input for demonstration
+            value={email}
+            onChange={(e) => setEmail(e.target.value)} 
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-            disabled
           />
+          {/* Added a placeholder password input for completeness */}
+          <input 
+            type="password" 
+            placeholder="Password" 
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+          />
+          
           <button 
-            className="w-full py-2.5 rounded-md text-white font-medium bg-blue-600 opacity-50 cursor-not-allowed"
-            disabled
+            type="submit" // Triggers the handleSubmit function
+            className="w-full py-2.5 rounded-md text-white font-medium bg-blue-600 hover:bg-blue-700 transition duration-150"
           >
             Log In
           </button>
-        </div>
+        </form>
 
         <p className="mt-6 text-sm text-gray-500">
           Don't have an account?{' '}
