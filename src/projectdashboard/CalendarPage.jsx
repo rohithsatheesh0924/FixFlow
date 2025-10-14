@@ -1,0 +1,120 @@
+import React, { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import Button from '../components/ui/Button';
+
+// --- Sub-Navigation Bar Component (Integrated for consistency) ---
+const SubNavTabs = ({ currentPath, projectName }) => {
+    const tabs = [
+        { name: 'Summary', path: '/dashboard/summary' },
+        { name: 'Board', path: '/dashboard' },
+        { name: 'List', path: '/dashboard/list' },
+        { name: 'Calendar', path: '/dashboard/calendar' },
+        { name: 'Timeline', path: '/dashboard/timeline' },
+        { name: 'Approvals', path: '/dashboard/approvals' },
+        { name: 'Forms', path: '/forms' },
+        { name: 'Pages', path: '/dashboard/pages' },
+        { name: 'Attachments', path: '/attachments' },
+        { name: 'Issues', path: '/dashboard/issues' },
+        { name: 'Reports', path: '/reports' },
+        { name: 'Archived Iss', path: '/dashboard/archived' },
+    ];
+
+    const isActive = (tabPath) => {
+        // Correctly handles highlighting for /dashboard/calendar
+        return currentPath.startsWith(tabPath);
+    };
+
+    return (
+        <div className="bg-white p-4 rounded-xl shadow-md mb-6 sticky top-0 z-10">
+            <div className="flex items-center justify-between mb-4">
+                <h2 className="flex items-center space-x-3 text-2xl font-bold text-gray-900">
+                    <div className="w-5 h-5 bg-purple-200 rounded-sm flex items-center justify-center text-sm text-purple-800 font-bold">LP</div>
+                    <span>{projectName}</span>
+                </h2>
+                <button className="text-sm font-medium text-blue-600 hover:text-blue-700">Project settings</button>
+            </div>
+            
+            <nav className="flex space-x-6 overflow-x-auto border-b border-gray-200 pb-2">
+                {tabs.map(tab => (
+                    <Link 
+                        key={tab.name} 
+                        to={tab.path} 
+                        className={`
+                            whitespace-nowrap text-sm font-medium pb-2 transition duration-150
+                            ${isActive(tab.path)
+                                ? 'text-blue-600 border-b-2 border-blue-600' 
+                                : 'text-gray-600 hover:text-gray-900 border-b-2 border-transparent'
+                            }
+                        `}
+                    >
+                        {tab.name}
+                    </Link>
+                ))}
+            </nav>
+        </div>
+    );
+};
+
+
+const CalendarPage = () => {
+    const location = useLocation(); 
+    const projectName = 'Landing page'; 
+    
+    const [currentView, setCurrentView] = useState('Month'); // Month, Week, Day
+
+    return (
+        <div className="pb-8">
+            {/* 1. PROJECT HEADER AND SUB-NAVBAR (STAYS STICKY) */}
+            <SubNavTabs currentPath={location.pathname} projectName={projectName} />
+            
+            {/* 2. MAIN CALENDAR CONTENT AREA */}
+            <div className="p-6 bg-white rounded-xl shadow-md">
+                
+                {/* Calendar Toolbar */}
+                <div className="flex justify-between items-center mb-6 border-b pb-4">
+                    <h1 className="text-xl font-bold text-gray-900">Project Calendar</h1>
+                    
+                    <div className="flex space-x-3">
+                        <Button 
+                            onClick={() => console.log('Previous month clicked')}
+                            className="!bg-gray-100 !text-gray-700 !py-1 !px-3 !text-sm hover:!bg-gray-200"
+                        >
+                            &lt;
+                        </Button>
+                         <Button 
+                            onClick={() => console.log('Next month clicked')}
+                            className="!bg-gray-100 !text-gray-700 !py-1 !px-3 !text-sm hover:!bg-gray-200"
+                        >
+                            &gt;
+                        </Button>
+                        <Button 
+                            onClick={() => setCurrentView('Today')}
+                            className="!bg-blue-600 !text-white !py-1 !px-3 !text-sm hover:!bg-blue-700"
+                        >
+                            Today
+                        </Button>
+                        
+                        <select 
+                            value={currentView}
+                            onChange={(e) => setCurrentView(e.target.value)}
+                            className="p-1 border border-gray-300 rounded-md text-sm cursor-pointer bg-white"
+                        >
+                            <option value="Month">Month</option>
+                            <option value="Week">Week</option>
+                            <option value="Day">Day</option>
+                        </select>
+                    </div>
+                </div>
+
+                {/* Calendar Grid Placeholder */}
+                <div className="min-h-[600px] bg-gray-50 border border-gray-200 rounded-lg flex items-center justify-center">
+                    <p className="text-gray-600 text-lg">
+                        Calendar View Placeholder (Integration with external library needed)
+                    </p>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default CalendarPage;

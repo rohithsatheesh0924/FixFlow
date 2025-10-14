@@ -19,6 +19,11 @@ import FormsPage from './projectdashboard/FormsPage';
 import AttachmentsPage from './projectdashboard/AttachmentsPage';
 import SummaryPage from './projectdashboard/SummaryPage';
 import ListPage from './projectdashboard/ListPage';
+import CalendarPage from './projectdashboard/CalendarPage';
+import TimelinePage from './projectdashboard/TimelinePage';
+import ApprovalsPage from './projectdashboard/ApprovalsPage';
+import PagesPage from './projectdashboard/PagesPage';
+
 
 const App = () => {
   return (
@@ -35,6 +40,8 @@ const App = () => {
         <Route path="/work-type" element={<WorkType />} />
         <Route path="/template-select" element={<TemplateSelection />} />
         <Route path="/create-project" element={<CreateProject />} />
+        <Route path="/dashboard/timeline" element={<TimelinePage />} />
+        <Route path="/dashboard/approvals" element={<ApprovalsPage />} />
         
 
         {/* Dashboard Flow (Uses fixed Header/Sidebar Layout) */}
@@ -47,6 +54,8 @@ const App = () => {
             <Route path="/attachments" element={<AttachmentsPage />} />
             <Route path="/dashboard/summary" element={<SummaryPage />} />
             <Route path="/dashboard/list" element={<ListPage />} />
+            <Route path="/dashboard/calendar" element={<CalendarPage />} />
+            <Route path="/dashboard/pages" element={<PagesPage />} />
         </Route>
 
         {/* Catch-all 404 */}
