@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 const ReportCard = ({ title, subtitle, description, icon }) => (
     <Link 
@@ -23,7 +23,7 @@ const ReportCard = ({ title, subtitle, description, icon }) => (
     </Link>
 );
 
-// SVGs to mock the visual appearance of the charts (Rest of ChartSVGs omitted for brevity)
+// SVGs to mock the visual appearance of the charts 
 const ChartSVGs = {
     Bar1: (
         <svg viewBox="0 0 100 100" className="w-full h-full fill-current text-blue-500/80">
@@ -124,38 +124,100 @@ const REPORTS = [
     },
 ];
 
+// --- Sub-Navigation Bar Component (Reused from FormsPage) ---
+const SubNavTabs = ({ currentPath, projectName }) => {
+    const tabs = [
+        { name: 'Summary', path: '/dashboard/summary' },
+        { name: 'Board', path: '/dashboard' },
+        { name: 'List', path: '/dashboard/list' },
+        { name: 'Calendar', path: '/dashboard/calendar' },
+        { name: 'Timeline', path: '/dashboard/timeline' },
+        { name: 'Approvals', path: '/dashboard/approvals' },
+        { name: 'Forms', path: '/forms' },
+        { name: 'Pages', path: '/dashboard/pages' },
+        { name: 'Attachments', path: '/attachments' },
+        { name: 'Issues', path: '/dashboard/issues' },
+        { name: 'Reports', path: '/reports' },
+        { name: 'Archived Iss', path: '/dashboard/archived' },
+    ];
+
+    const isActive = (tabPath) => {
+        if (tabPath === '/dashboard') {
+            return currentPath === tabPath;
+        }
+        // This handles cases like /reports and /reports/configure
+        return currentPath.startsWith(tabPath);
+    };
+
+    return (
+        <div className="bg-white p-4 rounded-xl shadow-md mb-6 sticky top-0 z-10">
+            <div className="flex items-center justify-between mb-4">
+                <h2 className="flex items-center space-x-3 text-2xl font-bold text-gray-900">
+                    <div className="w-5 h-5 bg-purple-200 rounded-sm flex items-center justify-center text-sm text-purple-800 font-bold">LP</div>
+                    <span>{projectName}</span>
+                </h2>
+                <button className="text-sm font-medium text-blue-600 hover:text-blue-700">Project settings</button>
+            </div>
+            
+            <nav className="flex space-x-6 overflow-x-auto border-b border-gray-200 pb-2">
+                {tabs.map(tab => (
+                    <Link 
+                        key={tab.name} 
+                        to={tab.path} 
+                        className={`
+                            whitespace-nowrap text-sm font-medium pb-2 transition duration-150
+                            ${isActive(tab.path)
+                                ? 'text-blue-600 border-b-2 border-blue-600' 
+                                : 'text-gray-600 hover:text-gray-900 border-b-2 border-transparent'
+                            }
+                        `}
+                    >
+                        {tab.name}
+                    </Link>
+                ))}
+            </nav>
+        </div>
+    );
+};
+
 
 const ReportsPage = () => {
+    const location = useLocation(); 
     const projectName = 'Landing page'; 
 
     return (
-        <div className="pb-8">
-            {/* Breadcrumbs/Context */}
-            <p className="text-sm text-gray-500 mb-6">
-                Projects / {projectName}
-            </p>
+        <>
+            {/* 1. PROJECT HEADER AND SUB-NAVBAR (STAYS STICKY) */}
+            <SubNavTabs currentPath={location.pathname} projectName={projectName} />
+            
+            {/* 2. MAIN REPORTS CONTENT AREA */}
+            <div className="pb-8 p-6 bg-white rounded-xl shadow-md">
+                <p className="text-sm text-gray-500 mb-6">
+                    Projects / {projectName}
+                </p>
 
-            <h1 className="text-3xl font-bold text-gray-900 mb-8">
-                All reports
-            </h1>
+                <h1 className="text-3xl font-bold text-gray-900 mb-8">
+                    All reports
+                </h1>
 
-            <h2 className="text-xl font-bold text-gray-900 mb-6">
-                Issue analysis
-            </h2>
+                <h2 className="text-xl font-bold text-gray-900 mb-6">
+                    Issue analysis
+                </h2>
 
-            {/* Reports Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                {REPORTS.map((report) => (
-                    <ReportCard
-                        key={report.title}
-                        title={report.title}
-                        subtitle={report.subtitle}
-                        description={report.description}
-                        icon={report.icon}
-                    />
-                ))}
+                {/* Reports Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                    {REPORTS.map((report) => (
+                        <ReportCard
+                            key={report.title}
+                            title={report.title}
+                            subtitle={report.subtitle}
+                            description={report.description}
+                            icon={report.icon}
+                        />
+                    ))}
+                </div>
             </div>
-        </div>
+        </>
     );
 };
 

@@ -16,6 +16,9 @@ import ReportsPage from './projectdashboard/ReportsPage';
 import ReportConfigurePage from './projectdashboard/ReportConfigurePage';
 import YourWorkPage from './pages/YourWorkPage';
 import FormsPage from './projectdashboard/FormsPage';
+import AttachmentsPage from './projectdashboard/AttachmentsPage';
+import SummaryPage from './projectdashboard/SummaryPage';
+import ListPage from './projectdashboard/ListPage';
 
 const App = () => {
   return (
@@ -41,6 +44,9 @@ const App = () => {
             <Route path="/reports" element={<ReportsPage />} />
             <Route path="/reports/configure/:reportName" element={<ReportConfigurePage />} />
             <Route path="/forms" element={<FormsPage />} />
+            <Route path="/attachments" element={<AttachmentsPage />} />
+            <Route path="/dashboard/summary" element={<SummaryPage />} />
+            <Route path="/dashboard/list" element={<ListPage />} />
         </Route>
 
         {/* Catch-all 404 */}
