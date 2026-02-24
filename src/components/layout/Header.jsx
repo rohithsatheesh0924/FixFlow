@@ -1,221 +1,171 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import Button from '../ui/Button';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 
-// --- App Switcher Menu (Defined globally) ---
+// --- App Switcher Menu (The Workspace Drawer) ---
 const AppSwitcherMenu = ({ onClose }) => {
   const menuRef = useRef(null);
-
+  
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        onClose();
-      }
+    const handleClickOutside = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) onClose();
     };
-    setTimeout(() => {
-      document.addEventListener('mousedown', handleClickOutside);
-    }, 0);
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [onClose]);
 
-  const APP_ITEMS = [
-    { name: 'Atlassian Home', iconColor: 'bg-purple-600', iconShape: 'A' },
-    { name: 'Jira', iconColor: 'bg-indigo-600', iconShape: 'J' },
-    { name: 'Administrations', iconColor: 'bg-gray-600', iconShape: (
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-white">
-        <path fillRule="evenodd" d="M11.828 2.25c-.965-.224-1.944-.224-2.909 0v.093a2.25 2.25 0 013.938 1.637c.057.433.13.865.214 1.297v1.077c0 1.096.398 2.143 1.117 2.862a5.52 5.52 0 001.09.845 2.25 2.25 0 011.33 2.054v.244a5.25 5.25 0 01-1.071 3.398l-.75.862A1.875 1.875 0 0115 19.349v1.272a1.875 1.875 0 001.875 1.875c.965 0 1.892-.375 2.583-1.032a3.376 3.376 0 00.14-4.832 5.612 5.612 0 00-1.802-2.128c-.689-.472-1.353-.949-1.353-1.827v-1.077c.084-.432.157-.864.214-1.297a2.25 2.25 0 013.938-1.637V8.423a2.25 2.25 0 00-2.454-2.217 2.25 2.25 0 00-2.217 2.454zM11.828 2.25a.75.75 0 00-1.656 0v.093a2.25 2.25 0 013.938 1.637c.057.433.13.865.214 1.297v1.077c0 1.096.398 2.143 1.117 2.862a5.52 5.52 0 001.09.845 2.25 2.25 0 011.33 2.054v.244a5.25 5.25 0 01-1.071 3.398l-.75.862A1.875 1.875 0 0115 19.349v1.272a1.875 1.875 0 001.875 1.875c.965 0 1.892-.375 2.583-1.032a3.376 3.376 0 00.14-4.832 5.612 5.612 0 00-1.802-2.128c-.689-.472-1.353-.949-1.353-1.827v-1.077c.084-.432.157-.864.214-1.297a2.25 2.25 0 013.938-1.637V8.423a2.25 2.25 0 00-2.454-2.217 2.25 2.25 0 00-2.217 2.454zM12 4.5A7.5 7.5 0 004.5 12a.75.75 0 01-1.5 0A9 9 0 0112 3a.75.75 0 010 1.5z" clipRule="evenodd" />
-      </svg>
-    )},
+  const apps = [
+    { name: 'FixFlow Pro', color: 'bg-violet-600', icon: 'F', path: '/issues/all' },
+    { name: 'Jira Indigo', color: 'bg-indigo-600', icon: 'J', path: '#' },
+    { name: 'Confluence', color: 'bg-purple-500', icon: 'C', path: '#' },
   ];
-
-  const RECOMMENDED_ITEMS = [
-    { name: 'Confluence', description: 'Document collaboration', iconColor: 'bg-red-500', iconShape: 'C' },
-    { name: 'Jira Product Discovery', description: 'Prioritize, collaborate, and deliver new i...', iconColor: 'bg-blue-600', iconShape: 'D' },
-    { name: 'Jira Service Management', description: 'Collaborative IT service managemnt', iconColor: 'bg-cyan-400', iconShape: 'S' },
-    { name: 'More Atlassian products', description: '', iconColor: 'bg-gray-400', iconShape: '...' },
-  ];
-
-  const MORE_ITEM = {
-    name: 'Confluence',
-    description: 'Document collaboration',
-    iconColor: 'bg-gray-200',
-    iconShape: (
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 text-gray-700">
-        <path fillRule="evenodd" d="M10 1.5a.75.75 0 01.75.75V3h2.5a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V4.5h-1.75v14.25a.75.75 0 01-1.5 0V4.5h-1.75V3a.75.75 0 01.75-.75H10z" clipRule="evenodd" />
-      </svg>
-    )
-  };
-
-  const MenuItem = ({ name, description, iconColor, iconShape, isRecommended = false }) => (
-    <a href="#" className="flex items-center justify-between p-3 hover:bg-gray-100 rounded-lg transition duration-100">
-      <div className="flex items-center space-x-3">
-        <div className={`w-8 h-8 rounded-md flex items-center justify-center font-bold text-sm ${iconColor}`}>
-          {typeof iconShape === 'string' ? <span className="text-white">{iconShape}</span> : iconShape}
-        </div>
-        <div>
-          <p className="text-sm font-medium text-gray-900">{name}</p>
-          {description && <p className="text-xs text-gray-500">{description}</p>}
-        </div>
-      </div>
-      {isRecommended && (
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-gray-400">
-          <path fillRule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H3.75A.75.75 0 013 10z" clipRule="evenodd" />
-        </svg>
-      )}
-    </a>
-  );
 
   return (
-    <div ref={menuRef} className="absolute top-12 left-0 mt-2 w-72 bg-white rounded-lg shadow-2xl border border-gray-100 z-50 p-4">
-      <h4 className="text-xs font-semibold text-gray-500 uppercase mb-3">Your Apps</h4>
-      <div className="space-y-1 border-b pb-4 mb-4">
-        {APP_ITEMS.map(item => (
-          <MenuItem key={item.name} {...item} />
+    <div ref={menuRef} className="absolute top-full left-0 mt-2 w-72 bg-white rounded-xl shadow-2xl border border-violet-100 z-50 p-4 animate-in fade-in zoom-in duration-150">
+      <h4 className="text-[10px] font-black text-violet-400 uppercase mb-3 px-1 tracking-[0.2em]">Workspace</h4>
+      <div className="space-y-1">
+        {apps.map(app => (
+          <Link 
+            key={app.name} 
+            to={app.path} 
+            onClick={onClose}
+            className="w-full flex items-center p-3 hover:bg-violet-50 rounded-lg transition-colors group"
+          >
+            <div className={`w-8 h-8 rounded-md flex items-center justify-center font-bold text-white shadow-sm ${app.color}`}>
+              {app.icon}
+            </div>
+            <span className="ml-3 text-sm font-semibold text-gray-800 group-hover:text-violet-700">{app.name}</span>
+          </Link>
         ))}
       </div>
-
-      <h4 className="text-xs font-semibold text-gray-500 uppercase mb-3">Recommended for your team</h4>
-      <div className="space-y-1 border-b pb-4 mb-4">
-        {RECOMMENDED_ITEMS.map(item => (
-          <MenuItem key={item.name} {...item} isRecommended={true} />
-        ))}
-      </div>
-
-      <h4 className="text-xs font-semibold text-gray-500 uppercase mb-3">More</h4>
-      <MenuItem {...MORE_ITEM} />
-
-      <div className="mt-4">
-        <Button className="w-full bg-gray-100 text-gray-700 border border-gray-300 hover:bg-gray-200 focus:ring-gray-300">
-          Manage list
-        </Button>
+      <div className="mt-4 pt-4 border-t border-gray-100">
+        <button className="w-full py-2 text-xs font-bold text-violet-600 hover:bg-violet-50 rounded-lg border border-violet-200 uppercase tracking-wider transition-all">
+          Manage Workspace
+        </button>
       </div>
     </div>
   );
 };
 
-// --- Dummy Dropdown Menu for generic links ---
-const DummyDropdownMenu = ({ name, onClose }) => {
+// --- Nav Dropdown Component ---
+const NavDropdown = ({ name, path, onClose }) => {
   const menuRef = useRef(null);
+  
   useEffect(() => {
-    const handler = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) onClose();
+    const handler = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) onClose();
     };
-    setTimeout(() => document.addEventListener('mousedown', handler), 0);
+    document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
   }, [onClose]);
 
   return (
-    <div ref={menuRef} className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-100 z-50 p-3">
-      <p className="text-sm font-semibold text-gray-800 mb-2">{name} Options</p>
-      <a href="#" className="block text-sm text-gray-700 p-2 rounded-md hover:bg-gray-100">
-        View All {name}
-      </a>
-      <a href="#" className="block text-sm text-gray-700 p-2 rounded-md hover:bg-gray-100">
-        Configure {name}
-      </a>
+    <div ref={menuRef} className="absolute top-full left-0 mt-2 w-56 bg-white rounded-xl shadow-2xl border border-violet-100 z-50 py-2 animate-in fade-in slide-in-from-top-2 duration-200">
+      <div className="px-4 py-2 border-b border-violet-50">
+        <p className="text-[10px] font-black text-violet-400 uppercase tracking-widest">{name}</p>
+      </div>
+      <div className="py-1">
+        <Link to={path} onClick={onClose} className="block px-4 py-2 text-sm text-gray-700 hover:bg-violet-50 hover:text-violet-700 font-medium">
+          View all {name}
+        </Link>
+        {name === "Projects" && (
+          <Link to="/projects/recent" onClick={onClose} className="block px-4 py-2 text-sm text-gray-700 hover:bg-violet-50 hover:text-violet-700 font-medium">
+            Recent Projects
+          </Link>
+        )}
+        <div className="my-1 border-t border-violet-50"></div>
+        <button className="w-full text-left px-4 py-2 text-sm text-violet-600 font-bold hover:bg-violet-50">
+          Create {name.slice(0, -1)}
+        </button>
+      </div>
     </div>
   );
 };
 
-// --- Main Header Component ---
-const Header = ({ userInitials }) => {
+// --- Main Header ---
+const Header = ({ userInitials = "JD" }) => {
   const navigate = useNavigate();
   const location = useLocation();
-
-  // Track which menu is open by its name (e.g., 'Filters', 'Dashboards')
   const [openMenu, setOpenMenu] = useState(null);
 
-  const handleCreateAction = () => {
-    navigate('/create-project');
-  };
-
-  const headerNavItems = [
+  const navItems = [
     { name: 'Your work', path: '/your-work', type: 'simple' },
-    { name: 'Projects', path: '/projects', type: 'projects' },
-    { name: 'Filters', path: '/filters', type: 'dummy' },
-    { name: 'Dashboards', path: '/dashboards', type: 'dummy' },
-    { name: 'Teams', path: '/teams', type: 'dummy' },
-    { name: 'Plans', path: '/plans', type: 'dummy' },
-    { name: 'Apps', path: '/apps', type: 'dummy' },
+    { name: 'Projects', path: '/projects', type: 'dropdown' },
+    { name: 'Filters', path: '/filters', type: 'dropdown' },
+    { name: 'Dashboards', path: '/dashboards', type: 'dropdown' },
+    { name: 'Teams', path: '/teams', type: 'dropdown' },
+    { name: 'Apps', path: '/apps', type: 'appSwitcher' },
   ];
 
-  const isActive = (path) => location.pathname.includes(path) && path !== '/';
-
-  const renderDropdown = () => {
-    if (openMenu === 'Projects') {
-      return <AppSwitcherMenu onClose={() => setOpenMenu(null)} />;
-    }
-    if (['Filters', 'Dashboards', 'Teams', 'Plans', 'Apps'].includes(openMenu)) {
-      return <DummyDropdownMenu name={openMenu} onClose={() => setOpenMenu(null)} />;
-    }
-    return null;
-  };
-
   return (
-    <header className="flex items-center justify-between p-3 border-b border-gray-200 bg-white sticky top-0 z-20 shadow-sm">
-      <div className="flex items-center space-x-6">
-        <div className="flex items-center space-x-2 text-xl font-bold text-blue-600">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15.5l-5-5 1.41-1.41L11 15.68l7.59-7.59L20 9.5l-9 9z"/>
-          </svg>
-          <span>FixFlow</span>
-        </div>
+    <header className="flex items-center justify-between px-6 h-16 border-b border-violet-100 bg-white sticky top-0 z-40 shadow-sm shadow-violet-500/5">
+      <div className="flex items-center space-x-6 h-full">
+        {/* Logo Section */}
+        <Link to="/" className="flex items-center space-x-2.5 group">
+          <div className="w-9 h-9 bg-gradient-to-br from-violet-600 to-indigo-700 rounded-lg flex items-center justify-center shadow-lg shadow-violet-200 group-hover:scale-105 transition-transform">
+            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          </div>
+          <span className="text-xl font-black text-violet-950 tracking-tight">Fix<span className="text-violet-600">Flow</span></span>
+        </Link>
 
-        <nav className="hidden md:flex space-x-4 text-sm text-gray-700 relative">
-          {headerNavItems.map(item => {
-            const isOpen = openMenu === item.name;
-            const isMenuTrigger = item.type !== 'simple';
-
-            const onClickHandler = (e) => {
-              if (isMenuTrigger) {
-                e.preventDefault();
-                setOpenMenu(isOpen ? null : item.name); // Toggle by name
-              } else {
-                navigate(item.path);
-              }
-            };
-
-            return (
-              <div key={item.name} className="relative">
-                <a
-                  href={isMenuTrigger ? "#" : item.path}
-                  onClick={onClickHandler}
-                  className={`py-1 px-2 rounded-md flex items-center transition-colors ${
-                    isActive(item.path) || isOpen ? 'text-blue-600 bg-blue-50/50' : 'hover:text-blue-600'
-                  }`}
-                >
-                  {item.name}
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                    className={`w-4 h-4 ml-1 transition-transform ${isOpen ? 'rotate-180' : ''}`}
-                  >
-                    <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
+        {/* Navigation Section */}
+        <nav className="hidden lg:flex items-center h-full space-x-1">
+          {navItems.map((item) => (
+            <div key={item.name} className="relative h-full flex items-center">
+              <button
+                onClick={() => {
+                  if (item.type === 'simple') navigate(item.path);
+                  else setOpenMenu(openMenu === item.name ? null : item.name);
+                }}
+                className={`flex items-center px-4 h-[70%] rounded-lg text-sm font-semibold transition-all ${
+                  location.pathname.startsWith(item.path) || openMenu === item.name
+                    ? 'bg-violet-600 text-white shadow-md shadow-violet-200'
+                    : 'text-gray-600 hover:text-violet-600 hover:bg-violet-50'
+                }`}
+              >
+                {item.name}
+                {item.type !== 'simple' && (
+                  <svg className={`ml-1.5 w-3.5 h-3.5 transition-transform duration-200 ${openMenu === item.name ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 9l-7 7-7-7" />
                   </svg>
-                </a>
+                )}
+              </button>
 
-                {isOpen && renderDropdown()}
-              </div>
-            );
-          })}
+              {/* Conditional Menu Rendering */}
+              {openMenu === item.name && (
+                item.type === 'appSwitcher' 
+                  ? <AppSwitcherMenu onClose={() => setOpenMenu(null)} />
+                  : <NavDropdown name={item.name} path={item.path} onClose={() => setOpenMenu(null)} />
+              )}
+            </div>
+          ))}
         </nav>
-      </div>
 
-      <div className="flex items-center space-x-3">
-        <button
-          className="bg-purple-600 text-white px-3 py-1.5 rounded-md text-sm font-medium hover:bg-purple-700"
-          onClick={handleCreateAction}
+        {/* Global Create Button */}
+        <button 
+          onClick={() => navigate('/create-issue')}
+          className="ml-2 bg-violet-600 text-white px-5 py-2 rounded-lg text-sm font-bold hover:bg-violet-700 active:scale-95 transition-all shadow-lg shadow-violet-100"
         >
           Create
         </button>
-        <span className="text-xs font-semibold text-gray-500 border border-gray-300 px-2 py-1 rounded-full">
-          30 days left
-        </span>
-        <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center font-semibold text-sm">
+      </div>
+
+      {/* Right Tools Section */}
+      <div className="flex items-center space-x-5">
+        <div className="relative hidden md:block group">
+           <input 
+             type="text" 
+             placeholder="Quick search..." 
+             className="pl-10 pr-4 py-2 border border-violet-100 bg-violet-50/30 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-violet-400 focus:bg-white w-56 transition-all"
+           />
+           <svg className="w-4 h-4 absolute left-3.5 top-2.5 text-violet-400 group-focus-within:text-violet-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" strokeWidth="2.5" strokeLinecap="round"/>
+           </svg>
+        </div>
+        
+        {/* User Profile Avatar */}
+        <div className="w-9 h-9 rounded-full bg-violet-900 border-2 border-violet-200 text-white flex items-center justify-center text-xs font-black cursor-pointer hover:ring-4 hover:ring-violet-50 transition-all shadow-sm">
           {userInitials}
         </div>
       </div>

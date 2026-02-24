@@ -1,77 +1,83 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React from 'react';
+import { NavLink, Link } from 'react-router-dom';
 
-const Sidebar = ({ projectName }) => {
-    // List of issue filters to display in the project section
+const Sidebar = ({ projectName = "FixFlow Project" }) => {
+    // List of issue filters
     const issueFilters = [
-        { name: 'All issues', href: '#all' },
-        { name: 'My open issues', href: '#my-open' },
-        { name: 'Reported by me', href: '/reports' }, 
-        { name: 'Open issues', href: '#open' },
-        { name: 'Done issues', href: '#done' },
-        { name: 'Viewed recently', href: '#viewed' },
-        { name: 'Resolved recently', href: '#resolved' },
-        { name: 'Updated recently', href: '#updated' },
+        { name: 'All issues', href: '/issues/all' },
+        { name: 'My open issues', href: '/issues/my-open' },
+        { name: 'Reported by me', href: '/issues/reported' }, 
+        { name: 'Open issues', href: '/issues/open' },
+        { name: 'Done issues', href: '/issues/done' },
+        { name: 'Viewed recently', href: '/issues/recent' },
     ];
     
-    // Project icon component matching the design
+    // Classic Jira-style Project Icon
     const ProjectIcon = () => (
-        <div className="w-8 h-8 bg-purple-200 rounded-md flex items-center justify-center text-sm text-purple-800 font-bold">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 text-purple-600">
-                <path d="M12 2A10 10 0 002 12a10 10 0 0010 10 10 10 0 0010-10A10 10 0 0012 2zm-1.5 15a.75.75 0 01-1.5 0V8a.75.75 0 011.5 0v9z"/>
-                <path d="M12.5 7.5a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"/>
-            </svg>
+        <div className="w-8 h-8 bg-purple-600 rounded flex items-center justify-center text-white font-bold text-xs shrink-0 shadow-sm">
+            FF
         </div>
     );
 
-    const handleCreateProject = () => {
-        console.log("Action: Launching modal/form for new project creation.");
-    };
-
     return (
-        <div className="w-56 bg-white border-r border-gray-200 h-screen sticky top-0 p-4 flex flex-col justify-between overflow-y-auto relative">
-            <div>
-                {/* Active Project Title and Icon - NOW WRAPPED IN LINK TO DASHBOARD */}
-                <Link to="/dashboard" className="mb-6 flex items-center space-x-3 pb-3 border-b border-gray-200 cursor-pointer hover:bg-gray-50 rounded-md p-1 -mx-1 transition duration-100">
+        <aside className="w-64 bg-[#F4F5F7] border-r border-gray-200 h-full flex flex-col overflow-hidden">
+            {/* Top Section: Project Info */}
+            <div className="p-4 pt-6">
+                <Link to="/dashboard" className="flex items-center space-x-3 p-2 rounded hover:bg-gray-200 transition-colors duration-100 group">
                     <ProjectIcon />
-                    <span className="text-base font-semibold text-gray-900">{projectName}</span>
+                    <div className="flex flex-col overflow-hidden">
+                        <span className="text-sm font-bold text-gray-800 truncate">{projectName}</span>
+                        <span className="text-[11px] text-gray-500 font-medium">Software project</span>
+                    </div>
                 </Link>
+            </div>
 
-                {/* Issues Filter Section */}
-                <h4 className="text-xs font-semibold text-gray-500 uppercase mb-3">Issues</h4>
-                <nav className="space-y-1 pb-4 mb-4 border-b border-gray-200">
+            {/* Navigation Section */}
+            <div className="flex-1 overflow-y-auto px-3">
+                <h4 className="text-[11px] font-bold text-gray-500 uppercase tracking-wider px-3 mb-2 mt-4">
+                    Issues and Filters
+                </h4>
+                
+                <nav className="space-y-[2px]">
                     {issueFilters.map(item => (
-                        <Link 
+                        <NavLink 
                             key={item.name} 
                             to={item.href}
-                            className="block text-sm text-gray-700 p-2 rounded-lg hover:bg-blue-50 transition duration-100"
+                            className={({ isActive }) => `
+                                flex items-center px-3 py-2 text-sm rounded transition-all duration-100
+                                ${isActive 
+                                    ? 'bg-blue-50 text-blue-700 font-semibold border-l-4 border-blue-700 -ml-3 pl-6' 
+                                    : 'text-gray-700 hover:bg-gray-200'}
+                            `}
                         >
                             {item.name}
-                        </Link>
+                        </NavLink>
                     ))}
                 </nav>
 
-                {/* Additional Links */}
-                <Link to="/filters" className="block text-sm text-gray-700 p-2 rounded-lg hover:bg-blue-50 transition duration-100 mb-2">
-                    View all filters
-                </Link>
-                
-                <Link to="/projects" className="block text-sm text-gray-700 p-2 rounded-lg hover:bg-blue-50 transition duration-100">
-                    View all projects
-                </Link>
-            </div>
-            
-            {/* Footer */}
-            <div className="text-xs text-gray-500 pt-4">
-                <p className="mb-1">You're in a team-managed project</p>
-                <div className="flex items-center space-x-1 cursor-pointer hover:text-blue-600">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
-                        <path d="M10 2a8 8 0 100 16 8 8 0 000-16zM4.329 15.696A6.974 6.974 0 0110 13a6.974 6.974 0 015.671 2.696c-1.34-1.258-3.08-2.096-4.996-2.096s-3.656.838-4.996 2.096z" />
-                    </svg>
-                    <span>Give feedback</span>
+                <div className="mt-6 pt-4 border-t border-gray-200">
+                    <Link to="/filters" className="block px-3 py-2 text-sm text-gray-600 hover:bg-gray-200 rounded">
+                        View all filters
+                    </Link>
+                    <Link to="/projects" className="block px-3 py-2 text-sm text-gray-600 hover:bg-gray-200 rounded">
+                        View all projects
+                    </Link>
                 </div>
             </div>
-        </div>
+            
+            {/* Footer Section */}
+            <div className="p-4 border-t border-gray-200 bg-[#EBECF0]/50">
+                <p className="text-[10px] text-gray-500 font-medium mb-2 uppercase tracking-tight">
+                    Team-managed project
+                </p>
+                <button className="flex items-center space-x-2 text-gray-600 hover:text-blue-600 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span className="text-xs font-semibold">Give feedback</span>
+                </button>
+            </div>
+        </aside>
     );
 };
 

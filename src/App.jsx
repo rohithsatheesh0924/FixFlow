@@ -23,6 +23,20 @@ import CalendarPage from './projectdashboard/CalendarPage';
 import TimelinePage from './projectdashboard/TimelinePage';
 import ApprovalsPage from './projectdashboard/ApprovalsPage';
 import PagesPage from './projectdashboard/PagesPage';
+import AllIssues from './projectdashboard/AllIssues';
+import MyOpenIssues from './projectdashboard/MyOpenIssues';
+import ReportedByMe from './projectdashboard/ReportedByMe';
+import OpenIssues from './projectdashboard/OpenIssues';
+import DoneIssues from './projectdashboard/DoneIssues';
+import ViewedRecently from './projectdashboard/ViewedRecently';
+import ViewAllFilters from './projectdashboard/ViewedAllFilters';
+import ViewAllProjects from './projectdashboard/ViewAllProjects';
+import RecentProjects from './projectdashboard/RecentProjects';
+import ProjectRecent from './projectdashboard/ProjectRecent';
+import ViewAllDashboard from './projectdashboard/ViewAllDashboard';
+import ViewAllTeams from './projectdashboard/ViewAllTeams';
+import CreateTeam from './projectdashboard/CreateTeam';
+import CreateIssue from './projectdashboard/CreateIssue';
 
 
 const App = () => {
@@ -39,7 +53,7 @@ const App = () => {
         <Route path="/store-info" element={<StoreInfo />} />
         <Route path="/work-type" element={<WorkType />} />
         <Route path="/template-select" element={<TemplateSelection />} />
-        <Route path="/create-project" element={<CreateProject />} />
+        <Route path="/create" element={<CreateProject />} />
         <Route path="/dashboard/timeline" element={<TimelinePage />} />
         <Route path="/dashboard/approvals" element={<ApprovalsPage />} />
         
@@ -56,6 +70,21 @@ const App = () => {
             <Route path="/dashboard/list" element={<ListPage />} />
             <Route path="/dashboard/calendar" element={<CalendarPage />} />
             <Route path="/dashboard/pages" element={<PagesPage />} />
+            <Route path="/issues/all" element={<AllIssues />} />
+            <Route path="/dashboard/issues" element={<AllIssues />} />
+            <Route path="/issues/my-open" element={<MyOpenIssues />} />
+            <Route path="/issues/reported" element={<ReportedByMe />} />
+            <Route path="/issues/open" element={<OpenIssues />} />
+            <Route path="/issues/done" element={<DoneIssues />} />
+            <Route path="/issues/recent" element={<ViewedRecently />} />
+            <Route path="/filters" element={<ViewAllFilters />} />
+            <Route path="/projects" element={<ViewAllProjects />} />
+            <Route path="/recent" element={<RecentProjects />} />
+            <Route path="/projects/recent" element={<ProjectRecent />} />
+            <Route path="/dashboards" element={<ViewAllDashboard />} />
+            <Route path="/teams" element={<ViewAllTeams />} />
+            <Route path="/teams/create" element={<CreateTeam />} />
+            <Route path="/create-issue" element={<CreateIssue />} />
         </Route>
 
         {/* Catch-all 404 */}
